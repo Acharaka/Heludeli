@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,8 +56,8 @@ public class RegisterFragment extends Fragment {
 
 //            Get Value From EditText
             EditText nameEditText = getView().findViewById(R.id.edtName);
-            EditText userEditText = getView().findViewById(R.id.edtName);
-            EditText passwordEditText = getView().findViewById(R.id.edtName);
+            EditText userEditText = getView().findViewById(R.id.edtUser);
+            EditText passwordEditText = getView().findViewById(R.id.edtPassword);
 
 //            Change Type Data To String
             String name = nameEditText.getText().toString().trim();
@@ -70,6 +71,27 @@ public class RegisterFragment extends Fragment {
                 myAlert.normalDialog("Have Space", "Please Fill All Blank");
             } else {
 //                No Space
+
+                try {
+
+                    MyConstant myConstant = new MyConstant();
+                    AddUserThread addUserThread = new AddUserThread(getActivity());
+                    addUserThread.execute(name, user, password, myConstant.getUrlAddUser());
+                    String result = addUserThread.get();
+                    Log.d("14FedV1", "result = " + result);
+
+                    if (Boolean.parseBoolean(result)) {
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    } else {
+                        MyAlert myAlert = new MyAlert(getActivity());
+                        myAlert.normalDialog("Cannot Register", "Please try again");
+                    }
+
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
 
